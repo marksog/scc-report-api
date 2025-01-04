@@ -56,3 +56,6 @@ def get_me():
     if not user:
         return jsonify({"error": "User not found"}), 404
     return jsonify(user_schema.dump(user)), 200
+
+
+#testing 
