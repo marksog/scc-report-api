@@ -27,29 +27,33 @@ def create_report():
     
     new_report = Report(
         user_id=user_id,
-        date=validated['date']
+        date=validated.date
     )
     db.session.add(new_report)
     db.session.flush()  # Flush to get the new report ID (repot.id)
 
     # Add prayers
-    for p in validated.get("prayers", []):
-        prayer_obj = Prayer(report_id=new_report.id, **p)
+    for p in validated.prayers:
+        prayer_data = prayer_schema.dump(p)
+        prayer_obj = Prayer(report_id=new_report.id, **prayer_data)
         db.session.add(prayer_obj)
 
     # Add studies
-    for s in validated.get("studies", []):
-        study_obj = Study(report_id=new_report.id, **s)
+    for s in validated.studies:
+        study_data = study_schema.dump(s)
+        study_obj = Study(report_id=new_report.id, **study_data)
         db.session.add(study_obj)
     
     # Add outreaches
-    for o in validated.get("outreaches", []):
-        outreach_obj = Outreach(report_id=new_report.id, **o)
+    for o in validated.outreaches:
+        outreach_data = outreach_schema.dump(o)
+        outreach_obj = Outreach(report_id=new_report.id, **outreach_data)
         db.session.add(outreach_obj)
     
     # Add followups 
-    for f in validated.get("followups", []):
-        followup_obj = Followup(report_id=new_report.id, **f)
+    for f in validated.followups:
+        followup_data = followup_schema.dump(f)
+        followup_obj = Followup(report_id=new_report.id, **followup_data)
         db.session.add(followup_obj)
     
     db.session.commit()

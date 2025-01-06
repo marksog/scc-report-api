@@ -62,5 +62,5 @@ class Followup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     report_id = db.Column(db.Integer, db.ForeignKey('reports.id'), nullable=False)
     followup_date = db.Column(db.Date, nullable=True)
-    followup_persons = db.Column(db.String(255), nullable=True)
+    followup_persons = db.Column(db.String(255), nullable=True)  # shoudl be a list
     followup_details = db.Column(db.Text, nullable=True)

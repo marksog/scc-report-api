@@ -1,6 +1,7 @@
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import fields, validate, validates_schema, ValidationError
 from .models import User, Report, Prayer, Study, Outreach, Followup
+from . import db
 
 ################################################
 # User Schema
@@ -23,6 +24,7 @@ class PrayerSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Prayer
         load_instance = True
+        sqla_session =  db.session
 
     prayer_group_day = fields.Str(validate=validate.OneOf(
         ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
@@ -43,6 +45,7 @@ class StudySchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Study
         load_instance = True
+        sqla_session =  db.session
 
     study_content = fields.Str(validate=validate.Length(max=2000))
 
@@ -54,6 +57,7 @@ class OutreachSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Outreach
         load_instance = True
+        sqla_session =  db.session
 
     total_reached = fields.Int(validate=validate.Range(min=0))
     saved = fields.Int(validate=validate.Range(min=0))
@@ -72,6 +76,7 @@ class FollowupSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Followup
         load_instance = True
+        sqla_session =  db.session
 
 ################################################
 # Report Schema
@@ -81,8 +86,9 @@ class ReportSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Report
         load_instance = True
+        sqla_session =  db.session
 
-    prayers = fields.List(fields.Nested(PrayerSchema), required=False)
-    studies = fields.List(fields.Nested(StudySchema), required=False)
-    outreaches = fields.List(fields.Nested(OutreachSchema), required=False)
-    followups = fields.List(fields.Nested(FollowupSchema), required=False)
+    prayers = fields.List(fields.Nested(PrayerSchema), many=True, required=False)
+    studies = fields.List(fields.Nested(StudySchema), many=True, required=False)
+    outreaches = fields.List(fields.Nested(OutreachSchema), many=True, required=False)
+    followups = fields.List(fields.Nested(FollowupSchema), many=True, required=False)
